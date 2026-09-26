@@ -10,6 +10,7 @@ import ChatBot from '@/components/ChatBot'
 import { motionReduced } from '@/lib/a11y'
 import { useLenis, SCROLLER_ID } from '@/hooks/useLenis'
 import { useIsPhone } from '@/hooks/useMediaQuery'
+import { useFloatersOnScroll } from '@/hooks/useFloatersOnScroll'
 import { getPerfTier, watchFrameHealth, PERF_TIER_EVENT } from '@/lib/perf'
 
 // Lazy-load HeroCanvas so the 118KB Three.js bundle is fetched only
@@ -38,6 +39,7 @@ export default function App() {
   // the theme switch floats top-right on every page but Home (whose profile
   // header carries it), and the visits widget folds into that header.
   const phone = useIsPhone()
+  useFloatersOnScroll(phone)
   const panelRef = useRef<HTMLElement>(null)
 
   // The panel is the scroller, so a route change has to reset it by hand -

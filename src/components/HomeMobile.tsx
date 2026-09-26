@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { SealCheck, ArrowUpRight, Quotes, Stack, Certificate } from '@/components/slab'
+import { SealCheck, ArrowUpRight, Stack, Certificate } from '@/components/slab'
 import { profile } from '@/data/profile'
 import { techCount } from '@/data/stack'
 import ThemeButton from './ThemeButton'
@@ -87,7 +87,6 @@ export function HomeExplore() {
       <Link to="/testimonials" className="hproof">
         <span className="hproof__thumb">
           <img src="/testimonies/testimony-1.webp" alt="" width={96} height={96} loading="lazy" />
-          <span className="hproof__play" aria-hidden="true"><Quotes size={14} weight="fill" /></span>
         </span>
         <span className="hproof__copy">
           <span className="hproof__kicker">Carl L. Pelaez</span>

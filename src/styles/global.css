@@ -446,9 +446,12 @@ main > * {
    CURSOR RING
    One lagged ring trailing the native cursor
    (which stays visible - see CursorRing.tsx).
-   White + difference blend reads near-black on
-   the cream shader and near-white on navy-ink,
-   so one element works on every surface.
+   It paints its own ink - no mix-blend-mode.
+   A blend layer following the mouse made the
+   browser re-mix it against the animated shader
+   on every move, which is what made the page
+   stutter. A faint page-coloured halo keeps it
+   readable over photos and dark panels.
    ============================================ */
 .cursor-ring {
   position: fixed;
@@ -458,24 +461,25 @@ main > * {
   height: 36px;
   display: grid;
   place-items: center;
-  border: 1.5px solid var(--white);
+  border: 1.5px solid var(--navy);
   border-radius: var(--radius-circle);
   background: transparent;
-  mix-blend-mode: difference;
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--cream) 55%, transparent);
   pointer-events: none;
   z-index: 9999;
   opacity: 0;
   will-change: transform;
+  transition: background-color 0.25s ease-out, border-color 0.25s ease-out;
 }
+.cursor-ring[data-state='grow'] { border-color: color-mix(in srgb, var(--navy) 70%, transparent); }
+.cursor-ring[data-state='open'],
+.cursor-ring[data-state='drag'] { background: var(--navy); }
 .cursor-ring__label {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  /* Raw #000 is correct here, not a palette violation: it is a blend-math
-     operand. Under difference, black-on-white-disc inverts to light text
-     on a dark disc over cream, dark text on a light disc over navy-ink. */
-  color: #000;
+  color: var(--cream);
   opacity: 0;
 }
 

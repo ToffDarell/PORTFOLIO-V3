@@ -87,9 +87,10 @@ export default function CursorRing() {
         const disc = next === 'open' || next === 'drag'
         baseScale = next === 'grow' ? 1.5 : disc ? 2.4 : 1
         applyScale()
+        // Colours come from CSS per state (global.css), so they follow the
+        // theme; GSAP only animates what the compositor can do cheaply.
+        ring.dataset.state = next
         gsap.to(ring, {
-          backgroundColor: disc ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0)',
-          borderColor: next === 'grow' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 255, 255, 1)',
           opacity: next === 'hidden' ? 0 : 1,
           duration: 0.25,
           ease: 'power2.out',

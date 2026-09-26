@@ -226,7 +226,7 @@
     height: 34px;
     border-radius: 50%;
     background: var(--orange);
-    color: #141414;
+    color: var(--on-accent);
   }
   /* Glyph tiles: light plates in the light theme, navy in the dark one. */
   .htile--dark { background: linear-gradient(160deg, rgba(var(--accent-rgb), 0.08), transparent 60%), var(--white); }
@@ -327,3 +327,19 @@
 [data-theme='dark'] .hprofile__avatar { border-color: var(--paper); }
 [data-theme='dark'] .pfilter__btn[aria-pressed='true'] { background: var(--paper); }
 [data-theme='dark'] .tabbar { background: #050505; }
+
+/* ---------- Floating buttons get out of the way ----------
+   Chat and accessibility slide off while the visitor scrolls down to read
+   (see hooks/useFloatersOnScroll). Never while their own panel is open. */
+@media (max-width: 1099px) {
+  .a11y,
+  .chatbot {
+    transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
+  }
+  html[data-floaters='hidden'] .a11y:not(.is-open),
+  html[data-floaters='hidden'] .chatbot[data-open='false'] {
+    opacity: 0;
+    transform: translateY(24px);
+    pointer-events: none;
+  }
+}

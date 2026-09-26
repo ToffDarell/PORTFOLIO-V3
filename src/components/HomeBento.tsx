@@ -33,12 +33,14 @@ import { profile } from '@/data/profile'
 const PROJECT_SHOTS = work.slice(0, 5).map((w) => w.image)
 
 const OFFERS = [
-  { Icon: Code, title: 'Full Stack Web Development', note: 'React, Laravel, Node.js' },
-  { Icon: CloudArrowUp, title: 'SaaS Development', note: 'Multi-tenant, billing' },
+  // Short labels: six services share one small card in two columns. The
+  // full names live on the Services page (src/data/services.ts).
+  { Icon: Code, title: 'Web Apps', note: 'React, Laravel, Node.js' },
+  { Icon: CloudArrowUp, title: 'SaaS', note: 'Multi-tenant, billing' },
   { Icon: PenNib, title: 'UI/UX Design', note: 'Figma prototypes' },
-  { Icon: Globe, title: 'Business Websites', note: 'Fast, SEO-ready' },
-  { Icon: ChartBar, title: 'Dashboard Systems', note: 'Charts, admin panels' },
-  { Icon: GraduationCap, title: 'Capstone Systems', note: 'Concept to deployment' },
+  { Icon: Globe, title: 'Websites', note: 'Fast, SEO-ready' },
+  { Icon: ChartBar, title: 'Dashboards', note: 'Charts, admin panels' },
+  { Icon: GraduationCap, title: 'Capstone', note: 'Concept to deployment' },
 ] as const
 
 const CLIENTS = [
@@ -46,8 +48,11 @@ const CLIENTS = [
   { name: 'Daphne A. Dulfo', role: 'BSIT Student', work: 'System Developer · Capstone', logo: '/testimonies/testimony-2.webp' },
 ]
 
-// The fan: the portrait on top, two certificates behind it.
-const PHOTOS = ['/certs/ccna-itn.webp', '/certs/hackerrank-se.webp', profile.avatarSrc]
+// The fan: at BukSU behind, the portrait in front.
+const PHOTOS = ['/me/toff-school.webp', profile.avatarSrc]
+// Fan positions (--i). The CSS spaces cards for three (0, 1, 2); with two,
+// spread them wider so the back photo shows instead of a sliver.
+const FAN = PHOTOS.length === 2 ? [-0.6, 1.3] : PHOTOS.map((_, i) => i)
 
 /** The AI systems as a flat list: every leaf of the Projects tree, in order. */
 const leaves = (n: StackNode): StackNode[] =>
@@ -102,7 +107,7 @@ export default function HomeBento() {
         <CardHead Icon={User} title="About" desc="Fourth-year IT student from Bukidnon, and how I work." />
         <div className="bento__media bento__fan" aria-hidden="true">
           {PHOTOS.map((src, i) => (
-            <span key={src} className="bento__photo" style={{ ['--i' as string]: i }}>
+            <span key={src} className="bento__photo" style={{ ['--i' as string]: FAN[i] }}>
               <img src={src} alt="" loading="lazy" decoding="async" />
             </span>
           ))}

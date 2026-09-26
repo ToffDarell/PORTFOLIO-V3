@@ -2,7 +2,7 @@
 
 The third version of my portfolio: [toffdarell.dev](https://www.toffdarell.dev/).
 
-Full stack developer and fourth-year IT student at Bukidnon State University. The site shows my builds, services, stack, certifications and testimonials, with an AI version of me in the corner that answers questions about my work.
+Aspiring full stack developer and fourth-year IT student at Bukidnon State University. The site shows my builds, services, stack, certifications and testimonials, with an AI version of me in the corner that answers questions about my work.
 
 Stack: Vite 6, React 19, TypeScript, plain CSS custom properties, Three.js, GSAP, Lenis, React Router 7, Phosphor icons, Poppins. Contact form through EmailJS; chatbot through Groq on a Vercel Edge Function.
 

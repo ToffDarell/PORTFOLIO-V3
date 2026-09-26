@@ -44,7 +44,7 @@ export const profile: Profile = {
   name: 'Toff Darell Vergara',
   firstName: 'Toff',
   handle: '@toffdarell',
-  role: 'Full Stack Developer',
+  role: 'Aspiring Full Stack Developer',
   avatarSrc: '/me/toff.webp',
   verifiedLabel: 'Cisco CCNA certified',
   email: 'topedarell13@gmail.com',
@@ -58,7 +58,7 @@ export const profile: Profile = {
   // Keep it short: two halves, 5-8 words total.
   displayName: { line1: 'I build things', line2: 'that actually work.' },
   hero: {
-    body: 'Full stack developer and fourth-year IT student building web systems, SaaS and AI tools that solve real problems.',
+    body: 'Aspiring full stack developer and fourth-year IT student building web systems, SaaS and AI tools that solve real problems.',
     portraitSrc: '/me/toff.webp',
     portraitAlt: 'Portrait of Toff Darell Vergara',
   },

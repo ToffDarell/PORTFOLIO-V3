@@ -4,8 +4,9 @@
  * and as the chips on Home and the Projects card. Copy comes from work.ts, so
  * a project is written up once.
  *
- * Status is what the thing is today: "Live" (deployed, people use it),
- * "Shipped" (finished and delivered), "Academic" (a coursework build).
+ * Status matches the resume: "Live" (deployed, people use it), "Client"
+ * (built for a real client), "Capstone" (the capstone project), "Academic"
+ * (a coursework build), "Proposed" (built as a proposal).
  */
 
 import {
@@ -20,6 +21,8 @@ import {
   Terminal,
   Browsers,
   Cpu,
+  QrCode,
+  DeviceMobile,
 } from '@/components/slab'
 import type { Icon } from '@/components/slab'
 import { profile } from '@/data/profile'
@@ -54,20 +57,21 @@ export const aiStack: StackNode = {
   id: 'root',
   Icon: Sparkle,
   name: profile.name,
-  what: 'Nine systems, from real-time chat and SaaS to computer vision and C.',
+  what: 'Eleven systems, from real-time chat and SaaS to computer vision, Android and C.',
   stack: 'Web · SaaS · AI',
   children: [
     {
       id: 'web',
       Icon: Browsers,
       name: 'Web systems & SaaS',
-      what: 'Full stack apps for real organizations: lenders, schools, barangays and shops.',
+      what: 'Full stack apps for real organizations: lenders, schools, barangays, shops and a city transit office.',
       children: [
         build('paymonitor', Bank),
         build('cpag', Archive),
         build('barangay', Buildings),
         build('mugna', ShoppingBag),
         build('blackout', GameController),
+        build('borongan', QrCode),
       ],
     },
     {
@@ -80,9 +84,9 @@ export const aiStack: StackNode = {
     {
       id: 'systems',
       Icon: Cpu,
-      name: 'Games & systems',
-      what: 'Built from scratch, below the frameworks: a Java game engine and C data structures.',
-      children: [build('skyfall', GameController), build('homeroom', Terminal)],
+      name: 'Mobile, games & systems',
+      what: 'An Android inventory app, a Java game engine built from scratch and C data structures.',
+      children: [build('jams-gadget', DeviceMobile), build('skyfall', GameController), build('homeroom', Terminal)],
     },
   ],
 }

@@ -151,8 +151,8 @@ function AppsPreview() {
 const PROJECTS: Project[] = [
   { id: 'workflows', cat: 'sites', index: '01', title: 'Screens from real builds', desc: 'From chat rooms to lending ledgers. Open it and click any screen to see it full size.', Icon: FlowIcon, logos: [T('react'), T('laravel'), T('nodejs')], eyebrow: 'Screenshots', Section: AutomationsPanel, span: 2, Preview: WorkflowsPreview },
   { id: 'plan', cat: 'work', index: '02', title: 'Résumé', desc: 'My CV on one page. Read it here, or download the PDF.', Icon: PlanIcon, eyebrow: 'Curriculum vitae', Section: PlanPanel, Preview: PlanPreview },
-  { id: 'funnels', cat: 'sites', index: '06', title: 'Spin the reel', desc: 'All nine builds on a 3D reel. Drag it, then click a card.', Icon: GlobeIcon, eyebrow: 'Every build', Section: BarrelPanel, Preview: FunnelsPreview },
-  { id: 'ai', cat: 'ai', index: '07', title: 'Every build, by stack', desc: 'Nine systems grouped by what they are, with what each one runs on.', Icon: SparkIcon, logos: [T('python'), T('mysql'), T('mongodb')], eyebrow: 'By stack', Section: AIWindow, Preview: AIPreview },
+  { id: 'funnels', cat: 'sites', index: '06', title: 'Spin the reel', desc: 'The builds on a 3D reel. Drag it, then click a card.', Icon: GlobeIcon, eyebrow: 'Every build', Section: BarrelPanel, Preview: FunnelsPreview },
+  { id: 'ai', cat: 'ai', index: '07', title: 'Every build, by stack', desc: 'Eleven systems grouped by what they are, with what each one runs on.', Icon: SparkIcon, logos: [T('python'), T('mysql'), T('mongodb')], eyebrow: 'By stack', Section: AIWindow, Preview: AIPreview },
   { id: 'apps', cat: 'apps', index: '08', title: 'Case studies', desc: 'Each build written up: what it does, who it is for, and what it runs on.', Icon: DeviceIcon, logos: [T('github')], eyebrow: 'Case studies', Section: AppsWindow, span: 2, Preview: AppsPreview },
 ]
 
@@ -198,6 +198,7 @@ function ProjectModal({ project, onClose, children }: { project: Project; onClos
   return createPortal(
     <div
       className="pmodal"
+      data-lenis-prevent
       role="dialog"
       aria-modal="true"
       aria-label={project.title}

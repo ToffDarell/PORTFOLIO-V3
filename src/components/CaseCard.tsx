@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ArrowUpRight, GithubLogo, Globe } from '@/components/slab'
-import type { Work } from '@/data/work'
+import { shotsOf, type Work } from '@/data/work'
 
 /**
  * One build, written up: the screenshots with a thumbnail picker, then the
@@ -8,30 +8,32 @@ import type { Work } from '@/data/work'
  * from the featured builds on Projects, so both surfaces show the same card.
  */
 export default function CaseCard({ work }: { work: Work }) {
-  const shots = work.images ?? [work.image]
+  const shots = shotsOf(work)
   const [i, setI] = useState(0)
 
   return (
-    <article className="case" style={{ ['--case-color' as string]: work.accent }}>
-      <div className="case__media">
-        <img className="case__shot" src={shots[i]} alt={`${work.short} screenshot ${i + 1}`} decoding="async" />
-        {shots.length > 1 && (
-          <div className="case__thumbs" role="group" aria-label="Screenshots">
-            {shots.map((src, n) => (
-              <button
-                key={src}
-                type="button"
-                className="case__thumb"
-                aria-pressed={n === i}
-                aria-label={`Show screenshot ${n + 1}`}
-                onClick={() => setI(n)}
-              >
-                <img src={src} alt="" loading="lazy" />
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+    <article className={shots.length ? 'case' : 'case case--text'} style={{ ['--case-color' as string]: work.accent }}>
+      {shots.length > 0 && (
+        <div className="case__media">
+          <img className="case__shot" src={shots[i]} alt={`${work.short} screenshot ${i + 1}`} decoding="async" />
+          {shots.length > 1 && (
+            <div className="case__thumbs" role="group" aria-label="Screenshots">
+              {shots.map((src, n) => (
+                <button
+                  key={src}
+                  type="button"
+                  className="case__thumb"
+                  aria-pressed={n === i}
+                  aria-label={`Show screenshot ${n + 1}`}
+                  onClick={() => setI(n)}
+                >
+                  <img src={src} alt="" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="case__body">
         <span className="case__kicker">

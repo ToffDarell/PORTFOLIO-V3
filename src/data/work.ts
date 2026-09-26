@@ -6,7 +6,7 @@
  * Screenshots live in public/projects/. `logos` are marks from public/icons.
  */
 
-export type WorkStatus = 'Live' | 'Shipped' | 'Academic'
+export type WorkStatus = 'Live' | 'Client' | 'Capstone' | 'Academic' | 'Proposed'
 
 export type Work = {
   id: string
@@ -15,7 +15,9 @@ export type Work = {
   short: string
   category: string
   description: string
-  image: string
+  /** Main screenshot. Omit for a text-only build: it gets a case card but
+   *  stays out of the reel and the screenshot strips. */
+  image?: string
   /** Extra screenshots, first one included. Defaults to [image]. */
   images?: string[]
   live?: string
@@ -56,7 +58,7 @@ export const work: Work[] = [
     github: 'https://github.com/ToffDarell/PayMonitor',
     tags: ['Laravel', 'MySQL', 'Tailwind CSS', 'Alpine.js', 'Multi-Tenancy'],
     logos: [I('laravel'), I('mysql'), I('tailwindcss'), I('alpinejs')],
-    status: 'Shipped',
+    status: 'Academic',
     accent: '#FF2D20',
   },
   {
@@ -65,18 +67,18 @@ export const work: Work[] = [
     short: 'SafeRide',
     category: 'AI / Computer vision',
     description:
-      'Developed an AI-powered safety and violation detection system using YOLO, Python, and OpenCV to recognize helmet usage and capture license plates in real-time for traffic monitoring.',
+      'Built a real-time CCTV-based system that detects motorcycle helmet violations and recognizes license plates using YOLOv11 and OpenCV, with a Django REST backend and a React + TypeScript frontend for live monitoring and violation log management.',
     image: '/projects/saferide.webp',
     github: 'https://github.com/ToffDarell/SAFERIDEWEB',
-    tags: ['YOLOv8', 'Python', 'OpenCV', 'PyTorch', 'Flask'],
-    logos: [I('python'), I('pytorch'), I('opencv'), I('flask')],
-    status: 'Shipped',
+    tags: ['YOLOv11', 'OpenCV', 'PyTorch', 'Django REST', 'React + TypeScript'],
+    logos: [I('python'), I('pytorch'), I('opencv'), I('django'), I('react'), I('typescript')],
+    status: 'Capstone',
     accent: '#EE4C2C',
   },
   {
     id: 'cpag',
     title: 'CPAG - Graduate Research Archive & Monitoring System',
-    short: 'CPAG',
+    short: 'CPAG Research Archive',
     category: 'MERN stack',
     description:
       'Built a MERN stack academic research archive and document tracking platform for organizing, archiving, and monitoring masteral research documents and student progress.',
@@ -84,7 +86,7 @@ export const work: Work[] = [
     github: 'https://github.com/ToffDarell/CPAG-Graduates-Research-Monitoring-System',
     tags: ['MongoDB', 'Express', 'React', 'Node.js', 'MERN'],
     logos: [I('mongodb'), I('express'), I('react'), I('nodejs')],
-    status: 'Shipped',
+    status: 'Academic',
     accent: '#47A248',
   },
   {
@@ -98,7 +100,7 @@ export const work: Work[] = [
     github: 'https://github.com/ToffDarell/-Mugna-Leather-Arts',
     tags: ['Laravel', 'React', 'Tailwind CSS', 'MySQL'],
     logos: [I('laravel'), I('react'), I('tailwindcss'), I('mysql')],
-    status: 'Shipped',
+    status: 'Proposed',
     accent: '#A16207',
   },
   {
@@ -112,22 +114,47 @@ export const work: Work[] = [
     github: 'https://github.com/ToffDarell/BLACKOUTESPORTS',
     tags: ['PHP', 'MySQL', 'JavaScript', 'QR Booking'],
     logos: [I('php'), I('mysql'), I('javascript')],
-    status: 'Shipped',
+    status: 'Academic',
     accent: '#18181B',
   },
   {
+    id: 'borongan',
+    title: 'Borongan City Transit - QR Ticketing & Fee Collection System',
+    short: 'Borongan City Transit',
+    category: 'Client project',
+    description:
+      'Developed a municipal transport ticketing and fee collection system that enables passengers to pay fares via QR code scanning, manages digital wallet balances, automates route-based fare calculations, and tracks daily collection logs for transit administrators.',
+    image: '/projects/borongan.webp',
+    tags: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
+    logos: [I('php'), I('mysql'), I('javascript'), I('html5'), I('css3')],
+    status: 'Client',
+    accent: '#0F766E',
+  },
+  {
     id: 'barangay',
-    title: 'Smart Barangay - Resident & Digital Services System',
-    short: 'Smart Barangay',
+    title: 'Smart Services for Barangay North Poblacion Residents',
+    short: 'Smart Services for Barangay North Poblacion Residents',
     category: 'Government system',
     description:
-      'Developed a local government digital services portal for resident records management, official document requests, clearance issuance, and community announcements.',
+      'Developed an online document request system for Barangay North Poblacion, where residents can request barangay documents online, such as a Certificate of Residency, Certificate of Indigency, First Time Job Seeker certificate, etc., without having to line up at the barangay hall.',
     image: '/projects/barangay.webp',
     github: 'https://github.com/ToffDarell/Barangay-Smart-Services',
     tags: ['Laravel', 'MySQL', 'Alpine.js', 'Tailwind CSS'],
     logos: [I('laravel'), I('mysql'), I('alpinejs'), I('tailwindcss')],
-    status: 'Shipped',
+    status: 'Proposed',
     accent: '#2563EB',
+  },
+  {
+    id: 'jams-gadget',
+    title: "Jam's Gadget - Android Inventory App",
+    short: "Jam's Gadget",
+    category: 'Android app',
+    description:
+      'Contributed to building an Android inventory management application for a smartphone retail business as part of a three-person development team.',
+    tags: ['Java', 'Android Studio'],
+    logos: [I('java')],
+    status: 'Academic',
+    accent: '#3DDC84',
   },
   {
     id: 'skyfall',
@@ -161,7 +188,10 @@ export const work: Work[] = [
 
 export const workById = (id: string) => work.find((w) => w.id === id)
 
+/** A build's screenshots, first one included; empty for a text-only build. */
+export const shotsOf = (w: Work) => w.images ?? (w.image ? [w.image] : [])
+
 /** Every screenshot, in project order - the strip and the Home reel. */
-export const allShots = work.flatMap((w) => (w.images ?? [w.image]).map((src) => ({ src, label: w.short })))
+export const allShots = work.flatMap((w) => shotsOf(w).map((src) => ({ src, label: w.short })))
 
 export const GITHUB_REPOS = 'https://github.com/ToffDarell?tab=repositories'

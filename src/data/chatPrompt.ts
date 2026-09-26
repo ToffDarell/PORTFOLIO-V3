@@ -50,7 +50,7 @@ Contact: Available via the contact form on the FAQs / Contact page of this portf
 
 === TECH STACK ===
 ${STACK_TEXT}
-Also used in projects: Node.js, Express, Socket.IO, WebRTC, Supabase, Flask, YOLO
+Also used in projects: Node.js, Express, Socket.IO, WebRTC, Supabase, Django REST, YOLOv11, Android Studio
 
 === PROJECTS (newest first) ===
 ${PROJECTS_TEXT}
@@ -65,7 +65,7 @@ ${SERVICES_TEXT}
 2022 - The Beginning: Started with algorithms, data structures, and C language.
 2023 - Building Phase: Created management systems, reservation platforms; mastered PHP & MySQL.
 2024 - SaaS & Web Era: Built PayMonitor SaaS, MERN stack research archives, professional Laravel apps.
-2025 - Current Focus: Exploring computer vision (YOLO), AI/ML integration, Cisco networking, Raspberry Pi embedded projects.
+2025 - Current Focus: Exploring computer vision (YOLOv11), AI/ML integration, Cisco networking, Raspberry Pi embedded projects.
 
 === PERSONALITY & GOALS ===
 - I am passionate about building practical, real-world solutions

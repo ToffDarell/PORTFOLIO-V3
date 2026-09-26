@@ -1,10 +1,11 @@
 /**
- * Accessibility preferences. Four switches a visitor with low vision can flip
+ * Accessibility preferences. Five switches a visitor with low vision can flip
  * from the AccessMenu, each written as a `data-a11y-*` attribute on <html> so
  * a11y.css can act on it, and remembered in localStorage across visits.
  *
  * `motion` also feeds App.tsx: the shader is never mounted while it is on,
- * the same path prefers-reduced-motion already takes.
+ * the same path prefers-reduced-motion already takes. `plainBg` unmounts the
+ * shader alone and leaves every other animation running.
  */
 export type TextSize = 'md' | 'lg' | 'xl'
 export type A11yPrefs = {
@@ -12,11 +13,12 @@ export type A11yPrefs = {
   contrast: boolean
   motion: boolean
   links: boolean
+  plainBg: boolean
 }
 
 const KEY = 'kv-a11y'
 export const A11Y_EVENT = 'a11ychange'
-export const DEFAULT_PREFS: A11yPrefs = { text: 'md', contrast: false, motion: false, links: false }
+export const DEFAULT_PREFS: A11yPrefs = { text: 'md', contrast: false, motion: false, links: false, plainBg: false }
 
 export function readPrefs(): A11yPrefs {
   try {
@@ -28,6 +30,7 @@ export function readPrefs(): A11yPrefs {
       contrast: !!p.contrast,
       motion: !!p.motion,
       links: !!p.links,
+      plainBg: !!p.plainBg,
     }
   } catch {
     return DEFAULT_PREFS
@@ -44,6 +47,8 @@ export function applyPrefs(p: A11yPrefs) {
   else delete d.a11yMotion
   if (p.links) d.a11yLinks = 'true'
   else delete d.a11yLinks
+  if (p.plainBg) d.a11yPlainBg = 'true'
+  else delete d.a11yPlainBg
 }
 
 export function savePrefs(p: A11yPrefs) {
@@ -63,4 +68,10 @@ export function restorePrefs() {
 
 export function motionReduced(): boolean {
   return document.documentElement.dataset.a11yMotion === 'true'
+}
+
+/** The visitor turned the background lines off (or all motion). */
+export function backgroundHidden(): boolean {
+  const d = document.documentElement.dataset
+  return d.a11yPlainBg === 'true' || d.a11yMotion === 'true'
 }

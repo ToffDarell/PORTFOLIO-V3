@@ -99,6 +99,7 @@ export default function WorkflowSamples() {
         createPortal(
           <div
             className="wfs__modal"
+            data-lenis-prevent
             role="dialog"
             aria-modal="true"
             aria-label={`${active.label} screenshot`}

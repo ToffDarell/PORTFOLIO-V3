@@ -188,7 +188,7 @@ export default function ChatBot() {
   return (
     <div className="chatbot" data-open={open ? 'true' : 'false'}>
       {open && (
-        <div className="chatbot__panel" role="dialog" aria-label={`Chat with ${profile.firstName}`}>
+        <div className="chatbot__panel" role="dialog" data-lenis-prevent aria-label={`Chat with ${profile.firstName}`}>
           <header className="chatbot__head">
             <span className="chatbot__avatar">
               <img src={profile.avatarSrc} alt="" width={36} height={36} />
@@ -249,7 +249,7 @@ export default function ChatBot() {
           </div>
 
           {sheet && (
-            <div className="chatbot__sheet" role="dialog" aria-label={`Contact ${profile.firstName} directly`}>
+            <div className="chatbot__sheet" role="dialog" data-lenis-prevent aria-label={`Contact ${profile.firstName} directly`}>
               <div className="chatbot__sheet-head">
                 <b>Talk to the real {profile.firstName}</b>
                 <button type="button" className="chatbot__close" onClick={() => setSheet(false)} aria-label="Back to chat">

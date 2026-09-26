@@ -46,7 +46,7 @@ export function HomeStats() {
 }
 
 const TILES = [
-  { n: '01', label: 'Projects', to: '/projects', title: 'Systems built like real products.', desc: 'Nine builds, from real-time chat to computer vision.', img: '/projects/ka-buksuans.webp' },
+  { n: '01', label: 'Projects', to: '/projects', title: 'Systems built like real products.', desc: 'Eleven builds, from real-time chat to computer vision.', img: '/projects/ka-buksuans.webp' },
   { n: '02', label: 'Services', to: '/services', title: 'From first sketch to deployment.', desc: 'Web apps, SaaS, dashboards and capstone systems.', Icon: Stack, dark: true },
   { n: '03', label: 'Stack & Certs', to: '/stack', title: 'The tools, and the proof.', desc: `${techCount} technologies. Cisco CCNA and HackerRank certified.`, Icon: Certificate, dark: true, accent: true },
   { n: '04', label: 'Testimonials', to: '/testimonials', title: 'What teammates say.', desc: 'From the capstone systems I developed.', img: '/testimonies/testimony-1.webp' },

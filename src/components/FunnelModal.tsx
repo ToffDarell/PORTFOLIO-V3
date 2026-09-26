@@ -55,6 +55,7 @@ export function useFunnelModal() {
     createPortal(
       <div
         className="funnels__modal"
+        data-lenis-prevent
         role="dialog"
         aria-modal="true"
         aria-label={`${funnel.label} preview`}

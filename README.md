@@ -9,7 +9,7 @@ Stack: Vite 6, React 19, TypeScript, plain CSS custom properties, Three.js, GSAP
 ## What's inside
 
 - **Home** - the headline, a tools marquee, and a bento of every page.
-- **Projects** - three featured builds (Ka-Buksuan opens its live demo), my CV, a screenshot strip, a 3D reel of all nine builds, and case-study cards.
+- **Projects** - three featured builds (Ka-Buksuan opens its live demo), my CV, a screenshot strip, a 3D reel of the builds, and case-study cards.
 - **Services** - six services, how I work (plan, build, ship), and the project pipeline as a live diagram.
 - **Stack & Certs** - 35 technologies by category, and four certifications with verify links.
 - **Testimonials**, **About**, **FAQs / Contact** - with a contact form and a ready-made Gmail draft for proposals.

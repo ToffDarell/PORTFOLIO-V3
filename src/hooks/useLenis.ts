@@ -87,6 +87,10 @@ export function useLenis() {
         touchMultiplier: 1.5,
       })
 
+      // Lenis eats every wheel event on the page, so anything that scrolls on
+      // its own inside an overlay (dialogs, the chat, the a11y panel) must
+      // carry `data-lenis-prevent`, or the touchpad cannot scroll it.
+
       // Hand every Lenis scroll update to ScrollTrigger.
       lenis.on('scroll', ScrollTrigger.update)
 

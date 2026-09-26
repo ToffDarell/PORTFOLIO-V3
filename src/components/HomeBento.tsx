@@ -30,7 +30,7 @@ import { profile } from '@/data/profile'
  * height and Home stays a single viewport.
  */
 
-const PROJECT_SHOTS = work.slice(0, 5).map((w) => w.image)
+const PROJECT_SHOTS = work.flatMap((w) => (w.image ? [w.image] : [])).slice(0, 5)
 
 const OFFERS = [
   // Short labels: six services share one small card in two columns. The
@@ -117,7 +117,7 @@ export default function HomeBento() {
       {/* AI builds: the systems from the Projects tree, two chip rows
           scrolling against each other. */}
       <Link to="/projects" className="bento__card bento__card--ai">
-        <CardHead Icon={Robot} title="Builds" desc="Nine systems, from real-time chat to computer vision." />
+        <CardHead Icon={Robot} title="Builds" desc="Eleven systems, from real-time chat to computer vision." />
         <div className="bento__media bento__chips" aria-hidden="true">
           {toolRows.map((row, r) => (
             <div key={r} className="bento__chip-row" data-dir={r ? 'right' : 'left'}>

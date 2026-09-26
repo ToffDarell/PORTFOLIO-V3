@@ -122,3 +122,17 @@
 
 /* Inside the reel's modal shell the card replaces the iframe. */
 .funnels__modal-shell > .case { flex: 1; border-radius: 0; }
+
+/* Every build stacked in the Case studies window: the cards grow to their
+   content and the window scrolls, instead of each card scrolling itself. */
+.projects__cases { display: grid; gap: 20px; margin: 0; padding: 0; list-style: none; }
+.projects__cases .case {
+  height: auto;
+  overflow: visible;
+  border: 1px solid var(--line, rgba(0, 0, 0, 0.08));
+  border-radius: 20px;
+}
+
+/* A build with no screenshots: the write-up alone, one column. */
+.case--text { grid-template-columns: minmax(0, 1fr); }
+.case--text .case__body { max-width: 68ch; }

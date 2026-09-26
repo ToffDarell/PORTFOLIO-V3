@@ -20,7 +20,8 @@ import { useMemo } from 'react'
  *        raw `<img>` tags because gradients/layered fills cannot be reduced to
  *        a single silhouette.
  *   The renderer picks the mode by whether a `color` is set: color -> mask,
- *   no color -> img.
+ *   no color -> img. The imgs load eagerly: the track moves by transform, so
+ *   lazy loading fired late and showed a broken-image glyph as a logo slid in.
  * - Brand colors live in the data layer below (not tokens.css) because they are
  *   external brand identifiers, not part of the site palette. They are passed to
  *   CSS via `--brand-color` custom properties so the component stylesheet stays
@@ -83,7 +84,6 @@ export default function ToolsMarquee() {
                   src={tool.iconPath}
                   alt=""
                   aria-hidden="true"
-                  loading="lazy"
                   decoding="async"
                   width={20}
                   height={20}

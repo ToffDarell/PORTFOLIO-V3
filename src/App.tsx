@@ -7,7 +7,7 @@ import IntroOverlay from '@/components/IntroOverlay'
 import CursorRing from '@/components/CursorRing'
 import AccessMenu from '@/components/AccessMenu'
 import ChatBot from '@/components/ChatBot'
-import { motionReduced } from '@/lib/a11y'
+import { motionReduced, backgroundHidden, A11Y_EVENT } from '@/lib/a11y'
 import { useLenis, SCROLLER_ID } from '@/hooks/useLenis'
 import { useIsPhone } from '@/hooks/useMediaQuery'
 import { useFloatersOnScroll } from '@/hooks/useFloatersOnScroll'
@@ -59,6 +59,15 @@ export default function App() {
     return () => window.removeEventListener(PERF_TIER_EVENT, onTier)
   }, [])
 
+  // The a11y menu can switch the lines off (or all motion) at any time; the
+  // shader unmounts on the spot and comes back when the switch is cleared.
+  const [bgHidden, setBgHidden] = useState(backgroundHidden)
+  useEffect(() => {
+    const onPrefs = () => setBgHidden(backgroundHidden())
+    window.addEventListener(A11Y_EVENT, onPrefs)
+    return () => window.removeEventListener(A11Y_EVENT, onPrefs)
+  }, [])
+
   const [shouldLoadCanvas, setShouldLoadCanvas] = useState(false)
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -90,7 +99,7 @@ export default function App() {
       <IntroOverlay />
       <CursorRing />
       <a href={`#${SCROLLER_ID}`} className="skip-link">Skip to main content</a>
-      {shouldLoadCanvas && perfTier !== 'low' && (
+      {shouldLoadCanvas && perfTier !== 'low' && !bgHidden && (
         <Suspense fallback={null}>
           <HeroCanvas />
         </Suspense>

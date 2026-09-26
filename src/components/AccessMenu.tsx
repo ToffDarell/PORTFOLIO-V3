@@ -5,7 +5,8 @@ import { DEFAULT_PREFS, readPrefs, savePrefs, type A11yPrefs, type TextSize } fr
 /**
  * AccessMenu - fixed bottom-left, the mirror of the reviews widget.
  * One button opens a small panel of switches for visitors who find the page
- * hard to read: larger text, stronger contrast, motion off, underlined links.
+ * hard to read: larger text, stronger contrast, motion off, underlined links,
+ * and a plain background without the animated lines.
  * Every switch is a real button with aria-pressed; Escape closes the panel.
  */
 const SIZES: { value: TextSize; label: string; hint: string }[] = [
@@ -14,10 +15,11 @@ const SIZES: { value: TextSize; label: string; hint: string }[] = [
   { value: 'xl', label: 'A++', hint: 'Largest text' },
 ]
 
-const SWITCHES: { key: 'contrast' | 'motion' | 'links'; label: string; desc: string }[] = [
+const SWITCHES: { key: 'contrast' | 'motion' | 'links' | 'plainBg'; label: string; desc: string }[] = [
   { key: 'contrast', label: 'High contrast', desc: 'Darker text, stronger edges' },
   { key: 'motion', label: 'Reduce motion', desc: 'No animation or drifting' },
   { key: 'links', label: 'Underline links', desc: 'Every link gets a line' },
+  { key: 'plainBg', label: 'Hide background lines', desc: 'A plain background, lighter to run' },
 ]
 
 export default function AccessMenu() {
@@ -52,12 +54,13 @@ export default function AccessMenu() {
     }
   }, [open])
 
-  const changed = prefs.text !== 'md' || prefs.contrast || prefs.motion || prefs.links
+  const changed = prefs.text !== 'md' || prefs.contrast || prefs.motion || prefs.links || prefs.plainBg
 
   return (
     <div className={`a11y${open ? ' is-open' : ''}`} data-widget="a11y">
       <div
         className="a11y__panel"
+        data-lenis-prevent
         role="dialog"
         aria-label="Accessibility options"
         ref={panelRef}

@@ -18,25 +18,47 @@ const ENFORCED_MAX_TOKENS  = 700;
 const ENFORCED_TEMPERATURE = 0.7;
 
 // ── CORS & Origin Validation ──────────────────────────────────────────────────
-function isAllowedOrigin(origin: string | null): boolean {
-  if (!origin) return true; // Same-origin or non-browser server call
-  try {
-    const url = new URL(origin);
-    const hostname = url.hostname.toLowerCase();
+// Only my own sites may call this: toffdarell.dev, this project's own Vercel
+// URLs (production, branch and per-deploy, which Vercel exposes at runtime),
+// and localhost for `vercel dev`. Not every *.vercel.app - that is anyone's
+// Vercel site, and would let other pages spend this key. Browsers always send
+// Origin on a POST, so a missing one is a script, not the chat widget.
+const OWN_VERCEL_HOSTS = [
+  process.env.VERCEL_URL,
+  process.env.VERCEL_BRANCH_URL,
+  process.env.VERCEL_PROJECT_PRODUCTION_URL,
+]
+  .filter((h): h is string => Boolean(h))
+  .map((h) => h.toLowerCase())
 
-    if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '0.0.0.0') {
-      return true;
-    }
-    if (hostname === 'vercel.app' || hostname.endsWith('.vercel.app')) {
-      return true;
-    }
-    if (hostname === 'toffdarell.dev' || hostname.endsWith('.toffdarell.dev')) {
-      return true;
-    }
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false;
+  try {
+    const hostname = new URL(origin).hostname.toLowerCase();
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return true;
+    if (hostname === 'toffdarell.dev' || hostname.endsWith('.toffdarell.dev')) return true;
+    if (OWN_VERCEL_HOSTS.includes(hostname)) return true;
   } catch {
     // Malformed origin header
   }
   return false;
+}
+
+// ── Rate limit ────────────────────────────────────────────────────────────────
+// Per visitor IP, per Edge instance. Instances are short-lived and not shared,
+// so this is a speed bump against a script hammering the key, not a hard
+// quota - the hard cap is the spend limit on the Groq account.
+const WINDOW_MS = 60_000;
+const MAX_PER_WINDOW = 12;
+const hits = new Map<string, number[]>();
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  if (hits.size > 5000) hits.clear();
+  return recent.length > MAX_PER_WINDOW;
 }
 
 type ChatMessage = { role: string; content: unknown }
@@ -46,7 +68,8 @@ export default async function handler(req: Request): Promise<Response> {
   const allowed = isAllowedOrigin(origin);
 
   const corsHeaders = {
-    'Access-Control-Allow-Origin': origin && allowed ? origin : '*',
+    'Access-Control-Allow-Origin': allowed && origin ? origin : 'https://www.toffdarell.dev',
+    Vary: 'Origin',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
@@ -56,8 +79,8 @@ export default async function handler(req: Request): Promise<Response> {
     return new Response(null, { status: 204, headers: corsHeaders });
   }
 
-  // Reject unauthorized origins
-  if (origin && !allowed) {
+  // Reject unauthorized (or missing) origins
+  if (!allowed) {
     return new Response(JSON.stringify({ error: 'Forbidden origin' }), {
       status: 403,
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -71,11 +94,21 @@ export default async function handler(req: Request): Promise<Response> {
     });
   }
 
+  const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown';
+  if (rateLimited(ip)) {
+    return new Response(JSON.stringify({ error: 'Too many requests' }), {
+      status: 429,
+      headers: { 'Content-Type': 'application/json', 'Retry-After': '60', ...corsHeaders },
+    });
+  }
+
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
+    console.error('[api/chat] GROQ_API_KEY is not set in the Vercel environment');
     return new Response(
       JSON.stringify({
-        error: 'GROQ_API_KEY is not configured. Please set GROQ_API_KEY in Vercel → Settings → Environment Variables.',
+        // Setup detail stays in the logs, not the response.
+        error: 'Chat is not available right now.',
       }),
       { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     );
@@ -165,9 +198,10 @@ export default async function handler(req: Request): Promise<Response> {
     }
 
     if (!groqResponse.ok) {
-      const errText = await groqResponse.text();
-      return new Response(errText, {
-        status: groqResponse.status,
+      // Log Groq's detail server-side; the browser only needs the status.
+      console.error('[api/chat] Groq error', groqResponse.status, await groqResponse.text());
+      return new Response(JSON.stringify({ error: 'The AI service could not answer right now.' }), {
+        status: groqResponse.status === 429 ? 429 : 502,
         headers: {
           'Content-Type': 'application/json',
           ...corsHeaders,

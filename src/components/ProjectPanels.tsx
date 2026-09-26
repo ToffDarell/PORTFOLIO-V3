@@ -90,7 +90,7 @@ export function KaBuksuanPanel() {
   return (
     <div className="ppanel ppanel--frame">
       <FrameBar host="ka-buksuans.onrender.com" path="/" />
-      <LiveFrame src="https://ka-buksuans.onrender.com/" title="Ka-Buksuan live demo" />
+      <LiveFrame src="https://ka-buksuans.onrender.com/" title="Ka-Buksuan live demo" allow="camera; microphone" />
     </div>
   )
 }
@@ -131,7 +131,9 @@ function FrameBar({ host, path }: { host: string; path: string }) {
  *  main thread, so loading one mid-animation stalled the open by 100ms+. */
 const FRAME_DELAY_MS = 440
 
-function LiveFrame({ src, title }: { src: string; title: string }) {
+/** `allow` delegates browser features (camera, mic) to the framed page; the
+ *  site's Permissions-Policy in vercel.json must name that origin too. */
+function LiveFrame({ src, title, allow }: { src: string; title: string; allow?: string }) {
   const [ready, setReady] = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
@@ -145,6 +147,7 @@ function LiveFrame({ src, title }: { src: string; title: string }) {
         className="ppanel__iframe"
         src={src}
         title={title}
+        allow={allow}
         loading="eager"
         onLoad={() => setReady(true)}
         data-ready={ready ? 'true' : 'false'}

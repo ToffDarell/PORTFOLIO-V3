@@ -13,8 +13,9 @@ yarn-error.log*
 pnpm-debug.log*
 .env
 .env.*
-/.impeccable/
-# .env.production holds only the Contact Worker URL - public, and the build
-# needs it - so it is the one env file that is tracked.
-!.env.production
+# Local tool state: the impeccable design hook, Playwright screenshots
+.impeccable/
+.playwright-mcp/
+# Secrets (EmailJS, Groq) live in .env and in Vercel, never in git.
+# .env.example documents the variable names and is tracked.
 !.env.example

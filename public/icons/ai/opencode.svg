@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <defs>
+    <linearGradient id="opencodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <path d="M4.5 16.5L9.5 12L4.5 7.5" stroke="url(#opencodeGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="12" y1="16.5" x2="19.5" y2="16.5" stroke="url(#opencodeGrad)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M16 5.5L16.8 7.5L18.8 8.3L16.8 9.1L16 11.1L15.2 9.1L13.2 8.3L15.2 7.5L16 5.5Z" fill="#38BDF8"/>
+</svg>

@@ -1,0 +1,124 @@
+/* ============================================
+   CASE CARD - one build, written up. Opened by the Projects reel (inside the
+   funnel modal shell) and by the featured builds (inside a project dialog).
+   Two columns from 900px: screenshots left, write-up right.
+   ============================================ */
+.case {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(18px, 3vw, 36px);
+  overflow: auto;
+  background: var(--white);
+  color: var(--navy);
+}
+
+@media (min-width: 900px) {
+  .case {
+    grid-template-columns: minmax(0, 1.45fr) minmax(300px, 1fr);
+    align-items: start;
+    gap: clamp(24px, 3vw, 44px);
+  }
+}
+
+.case__media { display: grid; gap: 12px; min-width: 0; }
+
+.case__shot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--tint);
+  box-shadow: var(--shadow-soft);
+}
+
+.case__thumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+
+.case__thumb {
+  flex: 0 0 auto;
+  width: 88px;
+  height: 56px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--tint);
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.case__thumb:hover { opacity: 1; }
+.case__thumb[aria-pressed='true'] { opacity: 1; border-color: var(--orange); }
+.case__thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+
+.case__body { display: grid; gap: 14px; align-content: start; min-width: 0; }
+
+.case__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--orange-ink);
+}
+
+.case__status {
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--muted);
+  background: var(--tint-strong);
+}
+.case__status[data-status='Live'] { color: #fff; background: #22A15C; }
+
+.case__title {
+  margin: 0;
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.case__desc { margin: 0; font-size: var(--fs-body); line-height: var(--lh-body); color: var(--muted); }
+
+.case__tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
+.case__tags li {
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.case__links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+
+.case__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: none;
+  border: 1px solid var(--line-strong);
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.case__link:hover { transform: translateY(-1px); background: var(--tint); }
+.case__link--primary { color: var(--on-accent); background: var(--orange); border-color: transparent; }
+.case__link--primary:hover { background: var(--orange-hover); }
+
+/* Inside the reel's modal shell the card replaces the iframe. */
+.funnels__modal-shell > .case { flex: 1; border-radius: 0; }

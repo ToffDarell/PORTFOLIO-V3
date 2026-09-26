@@ -1,0 +1,158 @@
+:root {
+  /* Brand palette - Toff v3: black and white, like v2. The accent IS the ink,
+     and it flips with the theme (black on light, white on dark), so anything
+     sitting on it uses --on-accent. The names are roles, kept from the
+     template: --navy is the ink, --cream the page, --orange the accent. */
+  --navy:       #0A0A0A;   /* primary text, dark accents */
+  --navy-ink:   #050505;   /* matches shader dark base for .dark-section */
+  --cream:      #F5F5F5;   /* matches shader light base, page bg */
+  --white:      #FFFFFF;
+  --orange:     #0A0A0A;   /* accent: CTA, active states, icon tiles */
+  --orange-hover: #262626; /* accent hover */
+  --on-accent:  #FFFFFF;   /* text and icons ON the accent */
+  --orange-ink: #0A0A0A;   /* accent TEXT (eyebrows, kickers) */
+  --muted:      #595959;   /* 6.4:1 on #F5F5F5 */
+  --divider:    rgba(var(--ink-rgb), 0.12);
+  --success:    #2E9E6B;   /* form status ok - clears 4.5:1 on navy-ink */
+  --error:      #D9544F;   /* form status error - clears 4.5:1 on navy-ink */
+
+  /* Channels for the translucent shades the stylesheets mix by hand, as
+     rgba(var(--x-rgb), a). Constant across themes, like the literals they
+     replaced; swap these and every tint follows. */
+  --ink-rgb:    10, 10, 10;     /* ink shades: lines, shadows, tints */
+  --deep-rgb:   5, 5, 5;        /* the darkest shadows and scrims */
+  --accent-rgb: 10, 10, 10;     /* accent glows, rings, washes - flips in dark */
+  --paper-rgb:  245, 245, 245;  /* light washes over dark ground */
+  --light-rgb:  245, 245, 245;  /* light ink on dark */
+
+  /* Brands section - neutral logo plate so client marks read as framed logos,
+     not site UI (esp. an orange logo vs the --orange accent) */
+  --brands-chip-bg:     #FAFAFA;                  /* near-white, lifts off the page */
+  --brands-chip-border: rgba(var(--ink-rgb), 0.10);   /* hairline frame on the logo medallion */
+
+  /* Type */
+  --font-display: 'Poppins', system-ui, -apple-system, sans-serif;
+  --fs-display: clamp(64px, 9vw, 128px);
+  --fs-h2: clamp(32px, 4vw, 56px);
+  --fs-h3: clamp(22px, 2vw, 28px);
+  --fs-body: 15px;
+  --fs-eyebrow: 12px;
+  --fs-nav: 15px;
+  --lh-tight: 0.95;
+  --lh-heading: 1.25;
+  --lh-body: 1.65;
+  --ls-display: -0.03em;
+  --ls-eyebrow: 0.18em;
+
+  /* Layout */
+  --container-x: clamp(24px, 6vw, 96px);
+  --section-pad-y: clamp(110px, 13vh, 170px);
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* Shadows */
+  --shadow-soft: 0 20px 60px -20px rgba(var(--ink-rgb), 0.25);
+  --shadow-card: 0 40px 120px -30px rgba(var(--deep-rgb), 0.35);
+  --shadow-btn: 0 8px 24px -8px rgba(var(--ink-rgb), 0.25);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 180ms;
+  --dur-med: 320ms;
+  --dur-slow: 600ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   SHELL + THEME (rail redesign)
+   The page shell is fixed to the viewport: a left profile rail plus one
+   scrolling panel. --rail-w is 0 until the rail actually renders at 1100px,
+   so every `calc(100% - var(--rail-w))` stays correct on mobile.
+   ============================================ */
+:root {
+  --rail-w: 0px;
+  --panel-x: clamp(20px, 4vw, 64px);
+
+  /* Surfaces. These are the tokens that had to exist for the theme to flip
+     without rewriting the section stylesheets. */
+  --paper:      #FAFAFA;   /* raised card on the page */
+  --line:       rgba(var(--ink-rgb), 0.14);
+  --line-strong:rgba(var(--ink-rgb), 0.28);
+  --tint:       rgba(var(--ink-rgb), 0.05);
+  --tint-strong:rgba(var(--ink-rgb), 0.09);
+  --glass:      rgba(250, 250, 250, 0.72);
+  /* A plate that stays light in BOTH themes. Brand marks are external
+     identifiers and need a constant backdrop to read against. */
+  --plate:      #F5F5F5;
+  /* The opaque fill for sections that were written as white-on-navy back when
+     the shader inverted on scroll. It no longer does, so they carry their own
+     ground. Same navy in both themes: their type is light either way. */
+  --panel-dark: #050505;
+
+  /* Verified badge - Facebook blue, not the site accent. It is a platform
+     signal, not brand furniture, so it does not follow --orange. */
+  --verified:   #0866FF;
+
+  /* Ink for anything sitting on --plate. Both are constant across themes:
+     a brand mark on a light plate must not invert with the page. */
+  --plate-ink:  #0A0A0A;
+}
+
+@media (min-width: 1100px) {
+  :root { --rail-w: 312px; }
+}
+
+/* ---------- Dark theme ----------
+   Redefined at the root, not per component: every existing rule keeps reading
+   --cream (page), --navy (ink), --white (card surface) and flips with it.
+   Orange stays the single accent in both modes. */
+[data-theme='dark'] {
+  --cream:        #0A0A0A;
+  --paper:        #111111;
+  --white:        #141414;
+  --navy:         #F5F5F5;
+  --navy-ink:     #050505;
+  --muted:        #A3A3A3;
+  --divider:      rgba(255, 255, 255, 0.10);
+  --line:         rgba(255, 255, 255, 0.09);
+  --line-strong:  rgba(255, 255, 255, 0.20);
+  --tint:         rgba(255, 255, 255, 0.05);
+  --tint-strong:  rgba(255, 255, 255, 0.09);
+  --glass:        rgba(20, 20, 20, 0.72);
+  --orange:       #F5F5F5;
+  --orange-hover: #D4D4D4;
+  --on-accent:    #0A0A0A;
+  --orange-ink:   #F5F5F5;
+  --accent-rgb:   245, 245, 245;
+  --panel-dark:   #141414;
+  --brands-chip-bg:     #F5F5F5;
+  --brands-chip-border: rgba(255, 255, 255, 0.14);
+  --shadow-soft:  0 20px 60px -20px rgba(0, 0, 0, 0.75);
+  --shadow-card:  0 40px 120px -30px rgba(0, 0, 0, 0.85);
+  --shadow-btn:   0 8px 24px -8px rgba(0, 0, 0, 0.7);
+}
+
+/* Surfaces that stay dark in BOTH themes. A black accent would vanish on
+   them, so they carry the dark theme's accent locally. */
+.cgrid__aside,
+.tgrid__stage,
+.pmodal,
+.aig__head,
+.dark-section-alt,
+.tabbar,
+[data-theme='dark'] .htile--dark {
+  --orange:       #F5F5F5;
+  --orange-hover: #D4D4D4;
+  --on-accent:    #0A0A0A;
+  --orange-ink:   #F5F5F5;
+  --accent-rgb:   245, 245, 245;
+}

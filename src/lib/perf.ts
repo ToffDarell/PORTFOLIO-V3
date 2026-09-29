@@ -68,6 +68,26 @@ function setPerfTier(tier: PerfTier) {
 }
 
 /**
+ * The visitor switched the background lines back on (see App.tsx). Their
+ * choice outranks a verdict formed earlier in the tab - often during the very
+ * remount of the shader, which on a dev build alone can read as jank. Drop it
+ * and judge the page again from scratch; a truly slow device steps down again.
+ */
+export function resetPerfTier() {
+  try {
+    sessionStorage.removeItem(KEY)
+  } catch {
+    /* private mode - nothing was saved */
+  }
+  if (getPerfTier() !== 'high') {
+    // Removed, not set to 'high': styles/perf.css keys off the attribute's presence.
+    delete document.documentElement.dataset.perf
+    window.dispatchEvent(new CustomEvent<PerfTier>(PERF_TIER_EVENT, { detail: 'high' }))
+  }
+  void watchFrameHealth()
+}
+
+/**
  * Re-apply the tab's verdict before React renders, so a downgraded visitor
  * never sees the expensive version flash back on a route change or reload.
  */
@@ -141,15 +161,20 @@ function settled(): Promise<void> {
  * A median over a full window (with tab-switch outliers dropped) is what gets
  * judged, so a single hitch cannot downgrade anyone.
  */
+/** Bumped by each watch, so a reset retires the watch already running. */
+let watchRun = 0
+
 export async function watchFrameHealth() {
+  const run = ++watchRun
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   if (read() === 'low') return
 
   await settled()
 
   for (let check = 0; check < MAX_CHECKS; check++) {
-    if (getPerfTier() === 'low') return
+    if (run !== watchRun || getPerfTier() === 'low') return
     const median = await measure()
+    if (run !== watchRun) return
     if (median === null) {
       await wait(1200)
       continue

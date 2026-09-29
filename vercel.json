@@ -59,7 +59,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://api.emailjs.com; frame-src 'self' https://ka-buksuans.onrender.com; frame-ancestors 'self' https://toffdarell.dev https://www.toffdarell.dev; base-uri 'self'; form-action 'self';"
+          "value": "default-src 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://api.emailjs.com; frame-src 'self' https://ka-buksuans.onrender.com https://www.bukifinds.online; frame-ancestors 'self' https://toffdarell.dev https://www.toffdarell.dev; base-uri 'self'; form-action 'self';"
         }
       ]
     }

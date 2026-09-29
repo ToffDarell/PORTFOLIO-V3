@@ -43,6 +43,34 @@ export default function CaseCard({ work }: { work: Work }) {
         <h2 className="case__title">{work.title}</h2>
         <p className="case__desc">{work.description}</p>
 
+        {(work.role || work.team) && (
+          <dl className="case__credits">
+            {work.role && (
+              <div>
+                <dt>Role</dt>
+                <dd>{work.role}</dd>
+              </div>
+            )}
+            {work.team && (
+              <div>
+                <dt>Team</dt>
+                <dd>{work.team}</dd>
+              </div>
+            )}
+          </dl>
+        )}
+
+        {work.highlights?.length ? (
+          <div className="case__built">
+            <span className="case__built-title">What I built</span>
+            <ul className="case__built-list">
+              {work.highlights.map((h) => (
+                <li key={h}>{h}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
         <ul className="case__tags" role="list">
           {work.tags.map((t) => (
             <li key={t}>{t}</li>

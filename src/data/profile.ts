@@ -50,7 +50,7 @@ export const profile: Profile = {
   email: 'topedarell13@gmail.com',
   location: 'Bukidnon, Philippines',
   stats: [
-    { value: '9', label: 'Systems built' },
+    { value: '12', label: 'Systems built' },
     { value: '4', label: 'Certifications' },
     { value: 'GMT+8', label: 'Philippines' },
   ],

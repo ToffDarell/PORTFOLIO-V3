@@ -12,7 +12,12 @@ import { SERVICES_TEXT } from './services'
 const PROJECTS_TEXT = work
   .map((p, i) => {
     const links = [p.live && `Live demo: ${p.live}`, p.github && `GitHub: ${p.github}`].filter(Boolean).join(' | ')
-    return `${i + 1}. ${p.title}\n   - Tech: ${p.tags.join(', ')}\n   - Desc: ${p.description}\n   - ${links}`
+    const extra = [
+      p.role && `   - My role: ${p.role}`,
+      p.team && `   - ${p.team}`,
+      p.highlights?.length && `   - What I built: ${p.highlights.join('; ')}`,
+    ].filter(Boolean)
+    return [`${i + 1}. ${p.title}`, `   - Tech: ${p.tags.join(', ')}`, `   - Desc: ${p.description}`, ...extra, `   - ${links}`].join('\n')
   })
   .join('\n\n')
 

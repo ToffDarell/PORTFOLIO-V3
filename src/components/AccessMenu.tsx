@@ -3,7 +3,9 @@ import { PersonArmsSpread, X, ArrowCounterClockwise } from '@/components/slab'
 import { DEFAULT_PREFS, readPrefs, savePrefs, type A11yPrefs, type TextSize } from '@/lib/a11y'
 
 /**
- * AccessMenu - fixed bottom-left, the mirror of the reviews widget.
+ * AccessMenu - fixed bottom-left on desktop, the mirror of the reviews widget;
+ * on phones it joins the theme button up top (beside it on Home, under it
+ * elsewhere, see a11y.css).
  * One button opens a small panel of switches for visitors who find the page
  * hard to read: larger text, stronger contrast, motion off, underlined links,
  * and a plain background without the animated lines.
@@ -22,7 +24,7 @@ const SWITCHES: { key: 'contrast' | 'motion' | 'links' | 'plainBg'; label: strin
   { key: 'plainBg', label: 'Hide background lines', desc: 'A plain background, lighter to run' },
 ]
 
-export default function AccessMenu() {
+export default function AccessMenu({ home = false }: { home?: boolean }) {
   const [open, setOpen] = useState(false)
   const [prefs, setPrefs] = useState<A11yPrefs>(readPrefs)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -57,7 +59,7 @@ export default function AccessMenu() {
   const changed = prefs.text !== 'md' || prefs.contrast || prefs.motion || prefs.links || prefs.plainBg
 
   return (
-    <div className={`a11y${open ? ' is-open' : ''}`} data-widget="a11y">
+    <div className={`a11y${home ? ' a11y--home' : ''}${open ? ' is-open' : ''}`} data-widget="a11y">
       <div
         className="a11y__panel"
         data-lenis-prevent

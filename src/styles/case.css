@@ -136,3 +136,33 @@
 /* A build with no screenshots: the write-up alone, one column. */
 .case--text { grid-template-columns: minmax(0, 1fr); }
 .case--text .case__body { max-width: 68ch; }
+
+/* Team builds: who did what, then the features, before the stack. */
+.case__credits { display: grid; gap: 8px; margin: 0; }
+.case__credits div { display: grid; gap: 2px; }
+.case__credits dt {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.case__credits dd { margin: 0; font-size: 14px; line-height: 1.5; }
+
+.case__built { display: grid; gap: 8px; }
+.case__built-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.case__built-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.case__built-list li::marker { color: var(--case-color, var(--orange)); }

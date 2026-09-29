@@ -157,8 +157,12 @@
   --accent-rgb:   245, 245, 245;
 }
 
-/* A case card is a --white surface, so inside the dark dialog it takes the
-   page accent back in the light theme (the kicker and Live demo button). */
+/* The dialog's windows are --white surfaces, so inside the dark dialog they
+   take the page accent back in the light theme (the case kicker, the Live
+   demo button, the icons before each build's name). Dark bands inside them,
+   like .aig__head, set their own accent above and still win. */
+:root:not([data-theme='dark']) .pmodal .ppanel--window,
+:root:not([data-theme='dark']) .pmodal .ppanel--frame,
 :root:not([data-theme='dark']) .pmodal .case {
   --orange:       #0A0A0A;
   --orange-hover: #262626;

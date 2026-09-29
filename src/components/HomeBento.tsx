@@ -117,7 +117,7 @@ export default function HomeBento() {
       {/* AI builds: the systems from the Projects tree, two chip rows
           scrolling against each other. */}
       <Link to="/projects" className="bento__card bento__card--ai">
-        <CardHead Icon={Robot} title="Builds" desc="Eleven systems, from real-time chat to computer vision." />
+        <CardHead Icon={Robot} title="Builds" desc="Twelve systems, from real-time chat to computer vision." />
         <div className="bento__media bento__chips" aria-hidden="true">
           {toolRows.map((row, r) => (
             <div key={r} className="bento__chip-row" data-dir={r ? 'right' : 'left'}>

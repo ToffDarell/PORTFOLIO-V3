@@ -141,7 +141,9 @@
   }
   .hprofile__visits { color: var(--orange-ink); font-weight: 600; }
   .hprofile__visits::before { content: ' · '; color: var(--muted); font-weight: 400; }
-  .hprofile__theme { margin-left: auto; }
+  .hprofile__theme { margin-left: auto; flex: none; }
+  /* Room for the accessibility button, which sits left of the theme button on Home. */
+  .hprofile__who { margin-right: 52px; }
 
   .home__head { gap: 12px; }
   .home__headline { flex-direction: column; }
@@ -330,7 +332,8 @@
 
 /* ---------- Floating buttons get out of the way ----------
    Chat and accessibility slide off while the visitor scrolls down to read
-   (see hooks/useFloatersOnScroll). Never while their own panel is open. */
+   (see hooks/useFloatersOnScroll). Never while their own panel is open.
+   Accessibility sits up top on phones, so it slides up and out. */
 @media (max-width: 1099px) {
   .a11y,
   .chatbot {
@@ -342,4 +345,17 @@
     transform: translateY(24px);
     pointer-events: none;
   }
+  html[data-floaters='hidden'] .a11y:not(.is-open) { transform: translateY(-24px); }
 }
+
+/* ---------- Projects on a phone: Featured, then every build ---------- */
+.pgrid__group {
+  grid-column: 1 / -1;
+  margin: 8px 4px -2px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pgrid__group:first-child { margin-top: 0; }

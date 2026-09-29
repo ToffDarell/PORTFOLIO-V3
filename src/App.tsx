@@ -11,7 +11,7 @@ import { motionReduced, backgroundHidden, A11Y_EVENT } from '@/lib/a11y'
 import { useLenis, SCROLLER_ID } from '@/hooks/useLenis'
 import { useIsPhone } from '@/hooks/useMediaQuery'
 import { useFloatersOnScroll } from '@/hooks/useFloatersOnScroll'
-import { getPerfTier, watchFrameHealth, PERF_TIER_EVENT } from '@/lib/perf'
+import { getPerfTier, watchFrameHealth, resetPerfTier, PERF_TIER_EVENT } from '@/lib/perf'
 
 // Lazy-load HeroCanvas so the 118KB Three.js bundle is fetched only
 // when actually needed. Mobile + reduced-motion users skip the import
@@ -19,6 +19,11 @@ import { getPerfTier, watchFrameHealth, PERF_TIER_EVENT } from '@/lib/perf'
 // handles the visual baseline. PageSpeed showed Three.js had 76.6 KiB
 // of unused JS; not loading it at all on mobile is the cleaner fix.
 const HeroCanvas = lazy(() => import('@/components/HeroCanvasV2'))
+
+/** The shader never runs on a phone or for an OS-level reduced-motion ask. */
+const canRunShader = () =>
+  !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+  !window.matchMedia('(pointer: coarse) and (hover: none)').matches
 
 /**
  * The shell. It owns everything that outlives a route change: the contour
@@ -59,22 +64,32 @@ export default function App() {
     return () => window.removeEventListener(PERF_TIER_EVENT, onTier)
   }, [])
 
+  const [shouldLoadCanvas, setShouldLoadCanvas] = useState(false)
+
   // The a11y menu can switch the lines off (or all motion) at any time; the
   // shader unmounts on the spot and comes back when the switch is cleared.
+  // Clearing it is an explicit ask for the lines, so it also wipes a speed
+  // verdict the tab formed earlier (lib/perf.ts) and loads the shader if the
+  // page started without it.
   const [bgHidden, setBgHidden] = useState(backgroundHidden)
   useEffect(() => {
-    const onPrefs = () => setBgHidden(backgroundHidden())
+    let hidden = backgroundHidden()
+    const onPrefs = () => {
+      const next = backgroundHidden()
+      if (hidden && !next && canRunShader()) {
+        resetPerfTier()
+        setShouldLoadCanvas(true)
+      }
+      hidden = next
+      setBgHidden(next)
+    }
     window.addEventListener(A11Y_EVENT, onPrefs)
     return () => window.removeEventListener(A11Y_EVENT, onPrefs)
   }, [])
 
-  const [shouldLoadCanvas, setShouldLoadCanvas] = useState(false)
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const reduced =
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches || motionReduced()
-    const isMobile = window.matchMedia('(pointer: coarse) and (hover: none)').matches
-    if (reduced || isMobile) return
+    if (motionReduced() || !canRunShader()) return
     // Defer the Three.js fetch to idle time so it does not compete with
     // initial render / LCP. Falls back to setTimeout if requestIdleCallback
     // is unavailable (Safari).
@@ -119,7 +134,7 @@ export default function App() {
         </main>
       </div>
       {phone && <TabBar />}
-      <AccessMenu />
+      <AccessMenu home={pathname === '/'} />
       <ChatBot />
     </>
   )

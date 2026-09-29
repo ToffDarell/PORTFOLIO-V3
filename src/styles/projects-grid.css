@@ -552,3 +552,18 @@
   .bento__kicker { font-size: 10.5px; }
   .bento__build-desc { font-size: 12px; }
 }
+
+/* The résumé where the browser cannot frame a PDF (phones): open or download. */
+.ppanel__pdf {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 10px;
+  height: 100%;
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--navy);
+}
+.ppanel__pdf-title { font-size: 18px; font-weight: 700; }
+.ppanel__pdf-note { font-size: 14px; color: var(--muted); }
+.ppanel__pdf-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }

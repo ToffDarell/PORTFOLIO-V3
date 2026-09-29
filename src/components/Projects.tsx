@@ -18,7 +18,7 @@ export function AIStackSection() {
       <header className="projects__header">
         <span className="projects__eyebrow">Every build</span>
         <h2 className="projects__headline" id="projects-heading">
-          Eleven systems, grouped by what they are.
+          Twelve systems, grouped by what they are.
         </h2>
         <p className="projects__subhead">
           Open a branch to see what sits under it.
@@ -35,7 +35,7 @@ export function AppsSection() {
   return (
     <section className="projects projects--apps" aria-label="Case studies" data-reveal>
       <div className="projects__panel">
-        <span className="projects__ext-eyebrow">Eleven builds, written up</span>
+        <span className="projects__ext-eyebrow">Twelve builds, written up</span>
         <ul className="projects__cases" role="list">
           {work.map((w) => (
             <li key={w.id}>

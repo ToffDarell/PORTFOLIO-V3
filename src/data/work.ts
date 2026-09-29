@@ -24,6 +24,12 @@ export type Work = {
   github?: string
   tags: string[]
   logos: string[]
+  /** What I did on it, when it was a team build. */
+  role?: string
+  /** Who else built or backed it. */
+  team?: string
+  /** The features I built, one line each, for the case card's list. */
+  highlights?: string[]
   status: WorkStatus
   /** Brand-external accent for the case-study card. */
   accent: string
@@ -32,6 +38,37 @@ export type Work = {
 const I = (n: string) => `/icons/tech/${n}.svg`
 
 export const work: Work[] = [
+  {
+    id: 'bukifinds',
+    title: 'BukiFinds - Student Marketplace for Bukidnon',
+    short: 'BukiFinds',
+    category: 'Marketplace web app',
+    description:
+      'A web marketplace where college students across Bukidnon buy, sell, and swap uniforms, books, gadgets, homemade food, and services with students near their campus. Built as a collaboration with a student entrepreneurship team that proposed the venture.',
+    image: '/projects/bukifinds.webp',
+    images: [
+      '/projects/bukifinds.webp',
+      '/projects/bukifinds-2.webp',
+      '/projects/bukifinds-3.webp',
+      '/projects/bukifinds-4.webp',
+    ],
+    live: 'https://www.bukifinds.online',
+    tags: ['Next.js', 'React', 'Tailwind CSS', 'Supabase', 'PostgreSQL', 'Google OAuth', 'Vercel'],
+    logos: [I('nextjs'), I('react'), I('tailwindcss'), I('supabase'), I('vercel')],
+    role: 'Full-stack developer, with Atheo Jessar R. Caliao as front-end developer',
+    team: 'Venture partners: Frazen A. Maisog, Shantara Nikka Kyle Juarez, Thrisya Mae Y. Alia, Britney Jean C. Alagenio, Elvie Jane L. Jaducana',
+    highlights: [
+      'Browse and search with filters for school, category, price, and size, plus sell or swap listings',
+      'Listing posting with up to 5 photos, resized automatically on upload',
+      'Contact through Messenger or Instagram, with link cleanup that handles pasted profile links, share links, and plain usernames',
+      'Freemium limit enforced in the database: 3 active listings free, unlimited with a ₱20 30-day pass',
+      'Manual GCash and GoTyme payment flow: receipt upload to private storage, admin approval, and pass extensions that stack',
+      'Seller reviews after completed sales',
+      'Row Level Security so users can only edit their own listings',
+    ],
+    status: 'Live',
+    accent: '#0B4F8A',
+  },
   {
     id: 'ka-buksuan',
     title: 'Ka-Buksuan - Anonymous Video Chat for BukSU Students',

@@ -14,8 +14,22 @@
   font-family: var(--font-display);
 }
 @media (max-width: 1099px) {
-  /* clear the bottom tab bar on phones */
-  .a11y { left: 14px; bottom: calc(94px + env(safe-area-inset-bottom, 0px)); }
+  /* Phones: up with the theme button instead of over the cards by the tab
+     bar. Inner pages float the theme switch top-right, so this sits right
+     under it, inside the 56px their heads already keep clear. Home carries
+     the switch in its profile row, so there it sits beside it, in the room
+     .hprofile__who leaves. The panel drops down instead of up. */
+  .a11y {
+    left: auto;
+    bottom: auto;
+    top: calc(66px + env(safe-area-inset-top, 0px));
+    right: 16px;
+    z-index: 60;
+  }
+  .a11y--home {
+    top: calc(28px + env(safe-area-inset-top, 0px));
+    right: 72px;
+  }
 }
 
 .a11y__button {
@@ -75,6 +89,21 @@
   opacity: 1;
   transform: none;
   pointer-events: auto;
+}
+@media (max-width: 1099px) {
+  .a11y__button { width: 44px; height: 44px; }
+  .a11y__panel {
+    left: auto;
+    right: 0;
+    bottom: auto;
+    top: calc(100% + 10px);
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top right;
+  }
+}
+@media (max-width: 1099px) {
+  /* On Home, line the panel's right edge up with the theme button's. */
+  .a11y--home .a11y__panel { right: -52px; }
 }
 .a11y__head {
   display: flex;

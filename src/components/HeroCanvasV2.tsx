@@ -293,6 +293,9 @@ export default function HeroCanvasV2() {
       window.removeEventListener('themechange', onThemeChange)
       window.removeEventListener('resize', onResize)
       renderer.dispose()
+      // dispose() keeps the WebGL context alive, and browsers cap live
+      // contexts; the a11y switch can remount this many times in one visit.
+      renderer.forceContextLoss()
       if (el.contains(renderer.domElement)) el.removeChild(renderer.domElement)
       geo.dispose()
       mat.dispose()

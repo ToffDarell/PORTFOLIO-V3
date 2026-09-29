@@ -23,6 +23,7 @@ import {
   Cpu,
   QrCode,
   DeviceMobile,
+  Storefront,
 } from '@/components/slab'
 import type { Icon } from '@/components/slab'
 import { profile } from '@/data/profile'
@@ -57,15 +58,16 @@ export const aiStack: StackNode = {
   id: 'root',
   Icon: Sparkle,
   name: profile.name,
-  what: 'Eleven systems, from real-time chat and SaaS to computer vision, Android and C.',
+  what: 'Twelve systems, from a live student marketplace and SaaS to computer vision, Android and C.',
   stack: 'Web · SaaS · AI',
   children: [
     {
       id: 'web',
       Icon: Browsers,
       name: 'Web systems & SaaS',
-      what: 'Full stack apps for real organizations: lenders, schools, barangays, shops and a city transit office.',
+      what: 'Full stack apps for real people and organizations: students, lenders, schools, barangays, shops and a city transit office.',
       children: [
+        build('bukifinds', Storefront),
         build('paymonitor', Bank),
         build('cpag', Archive),
         build('barangay', Buildings),

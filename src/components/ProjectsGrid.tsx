@@ -1,10 +1,10 @@
 import { Fragment, useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowUpRight, X, VideoCamera, Bank, Eye, CursorClick } from '@/components/slab'
-import { FlowIcon, PlanIcon, GlobeIcon, SparkIcon, DeviceIcon } from './ProjectIcons'
-import { AutomationsPanel, PlanPanel, KaBuksuanPanel, PayMonitorPanel, SafeRidePanel, BarrelPanel, AIWindow, AppsWindow } from './ProjectPanels'
+import { ArrowUpRight, X, VideoCamera, Eye, CursorClick, ListBullets, FolderOpen, Storefront } from '@/components/slab'
+import { FlowIcon, PlanIcon, GlobeIcon, SparkIcon } from './ProjectIcons'
+import { AutomationsPanel, PlanPanel, KaBuksuanPanel, BukiFindsPanel, SafeRidePanel, BarrelPanel, AIWindow, AppsWindow, CasePanel } from './ProjectPanels'
 import { projectReel } from '@/data/funnels'
-import { allShots, workById } from '@/data/work'
+import { allShots, work, workById } from '@/data/work'
 import { aiStack, type StackNode } from '@/data/ai-stack'
 import { useIsPhone } from '@/hooks/useMediaQuery'
 
@@ -31,18 +31,7 @@ type Project = {
   /** Real marks of what the work was built in; replaces the icon tile. */
   logos?: string[]
   Preview: ComponentType
-  /** Phone filter bucket. */
-  cat: Cat
 }
-
-type Cat = 'work' | 'sites' | 'apps' | 'ai'
-const FILTERS: { key: Cat | 'all'; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'work', label: 'Featured' },
-  { key: 'sites', label: 'Screens' },
-  { key: 'apps', label: 'Case studies' },
-  { key: 'ai', label: 'Stack' },
-]
 
 const T = (n: string) => `/icons/tech/${n}.svg`
 const logosOf = (id: string) => workById(id)?.logos.slice(0, 1) ?? []
@@ -56,12 +45,26 @@ const thumbSrc = (f: (typeof projectReel)[number]) => f.thumb
 const APP_SHOTS = allShots.filter((_, i) => i % 2 === 0).map((s) => s.src)
 
 /** The three featured builds: each its own card in the stack, each its own
- *  pop-up. */
+ *  pop-up. The column is sized for three; a fourth squashes them. */
 const BUILDS: Project[] = [
-  { id: 'ka-buksuan', cat: 'work', index: '03', kicker: 'Real-time web app · Live', title: 'Ka-Buksuan', desc: descOf('ka-buksuan'), Icon: () => <VideoCamera size={20} weight="duotone" />, logos: logosOf('ka-buksuan'), eyebrow: 'Featured build', Section: KaBuksuanPanel, Preview: () => null },
-  { id: 'paymonitor', cat: 'work', index: '04', kicker: 'SaaS platform', title: 'PayMonitor', desc: descOf('paymonitor'), Icon: () => <Bank size={20} weight="duotone" />, logos: logosOf('paymonitor'), eyebrow: 'Featured build', Section: PayMonitorPanel, Preview: () => null },
-  { id: 'saferide', cat: 'work', index: '05', kicker: 'AI / Computer vision', title: 'SafeRide', desc: descOf('saferide'), Icon: () => <Eye size={20} weight="duotone" />, logos: logosOf('saferide'), eyebrow: 'Featured build', Section: SafeRidePanel, Preview: () => null },
+  { id: 'ka-buksuan', index: '03', kicker: 'Real-time web app · Live', title: 'Ka-Buksuan', desc: descOf('ka-buksuan'), Icon: () => <VideoCamera size={20} weight="duotone" />, logos: logosOf('ka-buksuan'), eyebrow: 'Featured build', Section: KaBuksuanPanel, Preview: () => null },
+  { id: 'bukifinds', index: '04', kicker: 'Marketplace web app · Live', title: 'BukiFinds', desc: descOf('bukifinds'), Icon: () => <Storefront size={20} weight="duotone" />, logos: logosOf('bukifinds'), eyebrow: 'Featured build', Section: BukiFindsPanel, Preview: () => null },
+  { id: 'saferide', index: '05', kicker: 'AI / Computer vision', title: 'SafeRide', desc: descOf('saferide'), Icon: () => <Eye size={20} weight="duotone" />, logos: logosOf('saferide'), eyebrow: 'Featured build', Section: SafeRidePanel, Preview: () => null },
 ]
+
+/** Every build as a row for the phone's full list; each opens its case card. */
+const ALL_BUILDS: Project[] = work.map((w) => ({
+  id: `case-${w.id}`,
+  index: '',
+  kicker: `${w.category} · ${w.status}`,
+  title: w.short,
+  desc: w.description,
+  Icon: FolderOpen,
+  logos: w.logos.slice(0, 1),
+  eyebrow: 'Project',
+  Section: () => <CasePanel id={w.id} />,
+  Preview: () => null,
+}))
 
 const leaves = (n: StackNode): StackNode[] => (n.children?.length ? n.children.flatMap(leaves) : [n])
 const AI_LEAVES = leaves(aiStack)
@@ -149,11 +152,11 @@ function AppsPreview() {
 }
 
 const PROJECTS: Project[] = [
-  { id: 'workflows', cat: 'sites', index: '01', title: 'Screens from real builds', desc: 'From chat rooms to lending ledgers. Open it and click any screen to see it full size.', Icon: FlowIcon, logos: [T('react'), T('laravel'), T('nodejs')], eyebrow: 'Screenshots', Section: AutomationsPanel, span: 2, Preview: WorkflowsPreview },
-  { id: 'plan', cat: 'work', index: '02', title: 'Résumé', desc: 'My CV on one page. Read it here, or download the PDF.', Icon: PlanIcon, eyebrow: 'Curriculum vitae', Section: PlanPanel, Preview: PlanPreview },
-  { id: 'funnels', cat: 'sites', index: '06', title: 'Spin the reel', desc: 'The builds on a 3D reel. Drag it, then click a card.', Icon: GlobeIcon, eyebrow: 'Every build', Section: BarrelPanel, Preview: FunnelsPreview },
-  { id: 'ai', cat: 'ai', index: '07', title: 'Every build, by stack', desc: 'Eleven systems grouped by what they are, with what each one runs on.', Icon: SparkIcon, logos: [T('python'), T('mysql'), T('mongodb')], eyebrow: 'By stack', Section: AIWindow, Preview: AIPreview },
-  { id: 'apps', cat: 'apps', index: '08', title: 'Case studies', desc: 'Each build written up: what it does, who it is for, and what it runs on.', Icon: DeviceIcon, logos: [T('github')], eyebrow: 'Case studies', Section: AppsWindow, span: 2, Preview: AppsPreview },
+  { id: 'workflows', index: '01', title: 'Screens from real builds', desc: 'From chat rooms to lending ledgers. Open it and click any screen to see it full size.', Icon: FlowIcon, logos: [T('react'), T('laravel'), T('nodejs')], eyebrow: 'Screenshots', Section: AutomationsPanel, span: 2, Preview: WorkflowsPreview },
+  { id: 'plan', index: '02', title: 'Résumé', desc: 'My CV on one page. Read it here, or download the PDF.', Icon: PlanIcon, eyebrow: 'Curriculum vitae', Section: PlanPanel, Preview: PlanPreview },
+  { id: 'funnels', index: '07', title: 'Spin the reel', desc: 'The builds on a 3D reel. Drag it, then click a card.', Icon: GlobeIcon, eyebrow: 'Every build', Section: BarrelPanel, Preview: FunnelsPreview },
+  { id: 'ai', index: '08', title: 'Every build, by stack', desc: 'Twelve systems grouped by what they are, with what each one runs on.', Icon: SparkIcon, logos: [T('python'), T('mysql'), T('mongodb')], eyebrow: 'By stack', Section: AIWindow, Preview: AIPreview },
+  { id: 'apps', index: '09', title: 'Case studies', desc: 'Each build written up: what it does, who it is for, and what it runs on.', Icon: ListBullets, eyebrow: 'Case studies', Section: AppsWindow, span: 2, Preview: AppsPreview },
 ]
 
 /** The icon tile, or the real marks stacked horizontally in its place. */
@@ -220,10 +223,6 @@ function ProjectModal({ project, onClose, children }: { project: Project; onClos
 export default function ProjectsGrid() {
   const [open, setOpen] = useState<Project | null>(null)
   const phone = useIsPhone()
-  const [cat, setCat] = useState<Cat | 'all'>('all')
-  const keep = (p: Project) => !phone || cat === 'all' || p.cat === cat
-  const projects = PROJECTS.filter(keep)
-  const builds = BUILDS.filter(keep)
   const triggerRef = useRef<HTMLElement | null>(null)
 
   const show = useCallback((p: Project, el: HTMLElement) => {
@@ -235,53 +234,53 @@ export default function ProjectsGrid() {
     requestAnimationFrame(() => triggerRef.current?.focus())
   }, [])
 
-  const stack = builds.length > 0 ? (
+  /** Builds as Open Builds rows: plate, kicker, title, one line, arrow. */
+  const stack = (list: Project[]) => (
     <div className="bento__stack">
+      {list.map((b) => (
+        <button
+          key={b.id}
+          type="button"
+          className="bento__card bento__card--btn bento__card--build"
+          onClick={(e) => show(b, e.currentTarget)}
+          aria-haspopup="dialog"
+        >
+          <span className="bento__build-plate">
+            {b.logos?.length ? <img src={b.logos[0]} alt="" width={22} height={22} /> : <b.Icon />}
+          </span>
+          <span className="bento__build-text">
+            <span className="bento__kicker">{b.kicker}</span>
+            <span className="bento__build-title">{b.title}</span>
+            <span className="bento__build-desc">{b.desc}</span>
+          </span>
+          <span className="bento__build-arrow">
+            <ArrowUpRight size={13} weight="bold" aria-hidden="true" />
+          </span>
+        </button>
+      ))}
+    </div>
+  )
 
-        {builds.map((b) => (
+  const card = (p: Project) => (
+    <button
+      key={p.id}
+      type="button"
+      className={`bento__card bento__card--btn${p.span === 2 ? ' bento__card--wide' : ''}`}
+      data-id={p.id}
+      onClick={(e) => show(p, e.currentTarget)}
+      aria-haspopup="dialog"
+    >
+      <span className="bento__head">
+        <Marks p={p} />
+        <span className="bento__title">{p.title}</span>
+        <span className="bento__desc">{p.desc}</span>
+        <ArrowUpRight size={15} weight="bold" aria-hidden="true" className="bento__arrow" />
+      </span>
+      <p.Preview />
+    </button>
+  )
 
-          <button
-
-            key={b.id}
-
-            type="button"
-
-            className="bento__card bento__card--btn bento__card--build"
-
-            onClick={(e) => show(b, e.currentTarget)}
-
-            aria-haspopup="dialog"
-
-          >
-
-            <span className="bento__build-plate">
-
-              {b.logos?.length ? <img src={b.logos[0]} alt="" width={22} height={22} /> : <b.Icon />}
-
-            </span>
-
-            <span className="bento__build-text">
-
-              <span className="bento__kicker">{b.kicker}</span>
-
-              <span className="bento__build-title">{b.title}</span>
-
-              <span className="bento__build-desc">{b.desc}</span>
-
-            </span>
-
-            <span className="bento__build-arrow">
-
-              <ArrowUpRight size={13} weight="bold" aria-hidden="true" />
-
-            </span>
-
-          </button>
-
-        ))}
-
-      </div>
-  ) : null
+  const plan = PROJECTS.find((p) => p.id === 'plan')
 
   return (
     <section className="pgrid" aria-labelledby="projects-title">
@@ -293,22 +292,6 @@ export default function ProjectsGrid() {
         <p className="pgrid__lede">Most started as school requirements. I built them like products anyway. Open a card to see the work.</p>
       </header>
 
-      {phone && (
-        <div className="pfilter" role="group" aria-label="Filter projects">
-          {FILTERS.map((f) => (
-            <button
-              key={f.key}
-              type="button"
-              className="pfilter__btn"
-              aria-pressed={cat === f.key}
-              onClick={() => setCat(f.key)}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-      )}
-
       <div className="home__glass pgrid__glass">
         {/* Hung on the sheet's top edge so it reads as a tag on the container,
             not a seventh card. aria-hidden: the lede already says it. */}
@@ -316,29 +299,27 @@ export default function ProjectsGrid() {
           <CursorClick size={14} weight="duotone" />
           Click a card to open it
         </span>
-        <div className="bento bento--projects">
-          {projects.map((p) => (
-            <Fragment key={p.id}>
-            <button
-              type="button"
-              className={`bento__card bento__card--btn${p.span === 2 ? ' bento__card--wide' : ''}`}
-              data-id={p.id}
-              onClick={(e) => show(p, e.currentTarget)}
-              aria-haspopup="dialog"
-            >
-              <span className="bento__head">
-                <Marks p={p} />
-                <span className="bento__title">{p.title}</span>
-                <span className="bento__desc">{p.desc}</span>
-                <ArrowUpRight size={15} weight="bold" aria-hidden="true" className="bento__arrow" />
-              </span>
-              <p.Preview />
-            </button>
-            {p.id === 'plan' && stack}
-            </Fragment>
-          ))}
-          {!projects.some((p) => p.id === 'plan') && stack}
-        </div>
+        {phone ? (
+          /* A phone gets one straight path: the best three, then every
+             build, then the CV. The reel, the stack and the screens are
+             desk views and stay on the wide layout. */
+          <div className="bento bento--projects">
+            <h2 className="pgrid__group">Featured</h2>
+            {stack(BUILDS)}
+            <h2 className="pgrid__group">All {work.length} projects</h2>
+            {stack(ALL_BUILDS)}
+            {plan && card(plan)}
+          </div>
+        ) : (
+          <div className="bento bento--projects">
+            {PROJECTS.map((p) => (
+              <Fragment key={p.id}>
+                {card(p)}
+                {p.id === 'plan' && stack(BUILDS)}
+              </Fragment>
+            ))}
+          </div>
+        )}
       </div>
 
       {open && (

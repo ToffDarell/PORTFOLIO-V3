@@ -7,6 +7,7 @@ import { useFunnelModal } from './FunnelModal'
 import { projectReel } from '@/data/funnels'
 import { workById } from '@/data/work'
 import CaseCard from './CaseCard'
+import { ArrowUpRight, DownloadSimple, FilePdf } from '@/components/slab'
 
 const FunnelBarrel = lazy(() => import('./FunnelBarrel'))
 
@@ -75,17 +76,45 @@ export function AppsWindow() {
   )
 }
 
-/** The CV, full height, straight away. */
+/** Phones cannot show a PDF inside a frame: Android Chrome has no inline
+ *  viewer and answers with "This content is blocked", iOS shows page one. */
+const canFramePdf = () =>
+  navigator.pdfViewerEnabled !== false && !window.matchMedia('(pointer: coarse) and (hover: none)').matches
+
+/** The CV, full height, straight away - or, where the browser cannot frame
+ *  a PDF, a card that opens or downloads it. */
 export function PlanPanel() {
+  const [inline] = useState(canFramePdf)
   return (
     <div className="ppanel ppanel--frame">
       <FrameBar host="toffdarell.dev" path="/resume.pdf" />
-      <LiveFrame src="/resume.pdf" title="Toff Darell Vergara - Resume" />
+      {inline ? (
+        <LiveFrame src="/resume.pdf" title="Toff Darell Vergara - Resume" />
+      ) : (
+        <div className="ppanel__stage">
+          <div className="ppanel__pdf">
+            <FilePdf size={44} weight="duotone" aria-hidden="true" />
+            <span className="ppanel__pdf-title">Toff Darell Vergara - Résumé</span>
+            <span className="ppanel__pdf-note">PDF · opens in your phone's viewer</span>
+            <div className="ppanel__pdf-actions">
+              <a className="case__link case__link--primary" href="/resume.pdf" target="_blank" rel="noopener noreferrer">
+                Open résumé
+                <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
+              </a>
+              <a className="case__link" href="/resume.pdf" download="Toff_Darell_Vergara_Resume.pdf">
+                <DownloadSimple size={16} weight="bold" aria-hidden="true" />
+                Download
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
-/** Ka-Buksuan is deployed, so its dialog is the live app itself. */
+/** Ka-Buksuan and BukiFinds are deployed, so their dialogs are the live apps
+ *  themselves. Each origin must also be in vercel.json's frame-src. */
 export function KaBuksuanPanel() {
   return (
     <div className="ppanel ppanel--frame">
@@ -95,20 +124,33 @@ export function KaBuksuanPanel() {
   )
 }
 
-/** The other featured builds have no public deploy: their case card. */
-function CasePanel({ id }: { id: string }) {
+export function BukiFindsPanel() {
+  return (
+    <div className="ppanel ppanel--frame">
+      <FrameBar host="www.bukifinds.online" path="/" />
+      <LiveFrame src="https://www.bukifinds.online/" title="BukiFinds live site" />
+    </div>
+  )
+}
+
+/** A build's case card in a window. The featured builds with no public
+ *  deploy open this, and so does every row of the phone's full list. */
+export function CasePanel({ id }: { id: string }) {
   const work = workById(id)
   if (!work) return null
   return (
     <div className="ppanel ppanel--frame">
-      <FrameBar host="github.com" path={work.github?.replace('https://github.com', '') ?? '/ToffDarell'} />
+      {work.github ? (
+        <FrameBar host="github.com" path={work.github.replace('https://github.com', '')} />
+      ) : (
+        <FrameBar host="toffdarell.dev" path={`/projects/${work.id}`} />
+      )}
       <div className="ppanel__stage">
         <CaseCard work={work} />
       </div>
     </div>
   )
 }
-export const PayMonitorPanel = () => <CasePanel id="paymonitor" />
 export const SafeRidePanel = () => <CasePanel id="saferide" />
 
 function FrameBar({ host, path }: { host: string; path: string }) {
